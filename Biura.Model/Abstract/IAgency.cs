@@ -10,6 +10,5 @@ namespace Biura.model.Abstract
 {
     internal interface IAgency
     {
-        public void AddManagement(Management management);
     }
 }

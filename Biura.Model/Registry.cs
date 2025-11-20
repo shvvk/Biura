@@ -21,6 +21,14 @@ namespace Biura.Model
             InsuranceDetails = new Insurance();
         }
 
+        public Registry(List<Client> clients, Excursion tripDetails, Payment initialPayment, Insurance insuranceDetails)
+        {
+            Clients = clients;
+            TripDetails = tripDetails;
+            InitialPayment = initialPayment;
+            InsuranceDetails = insuranceDetails;
+        }
+
         public decimal GetTripComission()
         {
             return(TripDetails.Cost * TripDetails.TripOperator.CommisionRate);

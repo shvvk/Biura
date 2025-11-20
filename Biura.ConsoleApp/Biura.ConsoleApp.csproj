@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Biura.model\Biura.model.csproj" />
+	  <ProjectReference Include="..\Biura.model\Biura.model.csproj" />
+	  <ProjectReference Include="..\Biura.Report\Biura.Report.csproj" />
+
   </ItemGroup>
 
 </Project>

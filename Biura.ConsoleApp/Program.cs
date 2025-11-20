@@ -1,23 +1,32 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 using Biura.Model;
-
-Management SiecBiur = new Management("Sieć");
+using Biura.Report;
+using Biura.Report.Generate;
 
 Operator op = new Operator("Itaka", "Polska", 0.1m);
 Operator op1 = new Operator("Rainbow", "Polska", 0.15m);
-SiecBiur.AddAgency(new Agency("travel", "Warszawa", new Owner("Jan", "Kowalski")));
-SiecBiur.AddOperator(op);
+Agency agencja = new Agency("travel", "Warszawa", new Owner("Jan", "Kowalski"));
+Insurance ins = new Insurance("4423423", "Allianz", DateTime.Now, DateTime.Now.AddMonths(6), 0.05m);
+agencja.AddOperator(op);
 op.AddExcursion("Egipt", DateTime.Now, 3245.23m, 2);
 op.ListExcursions();
-SiecBiur.TourOperators[0].AddExcursion("Wręczyca Mała", DateTime.Now, 4235.23m, 3);
-SiecBiur.TourOperators[0].ListExcursions();
-SiecBiur.AddOperator(op1);
-SiecBiur.TourOperators[1].AddExcursion("Monachium", DateTime.Now, 1234.56m, 4);
-SiecBiur.TourOperators[1].AddExcursion("Berlin", DateTime.Now, 2345.67m, 2);
-SiecBiur.TourOperators[1].AddExcursion("Praga", DateTime.Now, 3456.78m, 5);
-SiecBiur.ListAgencies();
-SiecBiur.ListAvilableExcursions();
+agencja.TourOperators[0].AddExcursion("Wręczyca Mała", DateTime.Now, 4235.23m, 3);
+agencja.TourOperators[0].ListExcursions();
+agencja.AddOperator(op1);
+agencja.TourOperators[1].AddExcursion("Monachium", DateTime.Now, 1234.56m, 4);
+agencja.TourOperators[1].AddExcursion("Berlin", DateTime.Now, 2345.67m, 2);
+agencja.TourOperators[1].AddExcursion("Praga", DateTime.Now, 3456.78m, 5);
+agencja.ListAllAvilableExcursions();
+agencja.NewRegistry(
+    new List<Client>
+    {
+        new Client("Anna", "Nowak", new DateTime(1990, 5, 15),"annanowak2@gmail.com"),
+        new Client("Piotr", "Zalewski", new DateTime(1985, 8, 20), "piotrszalewski232@gmail.com")
+    }, agencja.TourOperators[1].Excursions[0], new Payment(1200.00m, new DateTime(2025, 11, 5)), ins);
+
+var RegistryReport = new ReigstryCountReport();
+var ageReport = ageReportGenerator.GenerateReport(s_hotel);
 
 /*
 Agency tplanetpl = new Agency("travel", "Czestochowa", new Person("Robert", "Dymski", 32));

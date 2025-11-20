@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.ConsoleApp", "Biura.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.model", "..\Biura.model\Biura.model.csproj", "{0FE5918C-F7D2-476A-BD21-64395379F075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.Raport", "..\Biura.Raport\Biura.Raport.csproj", "{AC8726FD-8F20-4635-846D-118FD8A8C423}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.Report", "..\Biura.Report\Biura.Report.csproj", "{AC8726FD-8F20-4635-846D-118FD8A8C423}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

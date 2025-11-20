@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Biura.ConsoleApp\Biura.ConsoleApp.csproj" />
+    <ProjectReference Include="..\Biura.model\Biura.model.csproj" />
   </ItemGroup>
 
 </Project>
