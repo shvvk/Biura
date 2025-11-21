@@ -9,7 +9,8 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\Biura.model\Biura.model.csproj" />
-	  <ProjectReference Include="..\Biura.Report\Biura.Report.csproj" />
+	  <ProjectReference Include="..\Biura.Reports\Biura.Reports.csproj" />
+	  <ProjectReference Include="..\Biura.Tests\Biura.Tests.csproj" />
 
   </ItemGroup>
 

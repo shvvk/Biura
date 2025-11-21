@@ -7,28 +7,25 @@ namespace Biura.Model
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
 		public string Country { get; set; }
-        public List<Excursion> Excursions { get; private set; }
+        public List<Excursion> Excursions { get; private set; } = new List<Excursion>();
         public decimal CommisionRate { get; set; }
 
         public Operator()
 		{
 			Name = string.Empty;
 			Country = string.Empty;
-			Excursions = new List<Excursion>();
 			CommisionRate = 0;
         }
 		public Operator(Operator op)
 		{
 			Name = op.Name;
 			Country = op.Country;
-			Excursions = new List<Excursion>(op.Excursions);
 			CommisionRate = op.CommisionRate;
         }
         public Operator(string name, string country, decimal commisionRate)
 		{
 			Name = name;
 			Country = country;
-			Excursions = new List<Excursion>();
             CommisionRate = commisionRate;
         }
 

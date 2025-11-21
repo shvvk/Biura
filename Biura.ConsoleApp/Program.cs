@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 using Biura.Model;
-using Biura.Report;
-using Biura.Report.Generate;
+using Biura.Reports;
+using Biura.Reports.Generate;
 
 Operator op = new Operator("Itaka", "Polska", 0.1m);
 Operator op1 = new Operator("Rainbow", "Polska", 0.15m);
@@ -24,10 +24,9 @@ agencja.NewRegistry(
         new Client("Anna", "Nowak", new DateTime(1990, 5, 15),"annanowak2@gmail.com"),
         new Client("Piotr", "Zalewski", new DateTime(1985, 8, 20), "piotrszalewski232@gmail.com")
     }, agencja.TourOperators[1].Excursions[0], new Payment(1200.00m, new DateTime(2025, 11, 5)), ins);
-
-var RegistryReport = new ReigstryCountReport();
-var ageReport = ageReportGenerator.GenerateReport(s_hotel);
-
+var RegistryReport = new RegistryCount();
+var ageReport = RegistryReport.GenerateReport(agencja);
+Console.WriteLine(ageReport);
 /*
 Agency tplanetpl = new Agency("travel", "Czestochowa", new Person("Robert", "Dymski", 32));
 List<Excursion> excursions = new List<Excursion>();
