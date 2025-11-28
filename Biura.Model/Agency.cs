@@ -57,13 +57,14 @@ namespace Biura.Model
             }
         }
 
-        public void NewRegistry(List<Client> clients, Excursion tripDetails, Payment initialPayment, Insurance insuranceDetails)
+        public void NewRegistry(List<Client> clients, DateTime date, Excursion tripDetails, decimal initialPayment, Insurance insuranceDetails, bool surr = false)
         {
             Registry newRegistry = new Registry
             {
                 Clients = clients,
+                Date = date,
                 TripDetails = tripDetails,
-                InitialPayment = initialPayment,
+                InitialPayment = new Payment(initialPayment, date),
                 InsuranceDetails = insuranceDetails
             };
             Registries.Add(newRegistry);

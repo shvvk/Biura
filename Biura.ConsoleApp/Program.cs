@@ -23,10 +23,14 @@ agencja.NewRegistry(
     {
         new Client("Anna", "Nowak", new DateTime(1990, 5, 15),"annanowak2@gmail.com"),
         new Client("Piotr", "Zalewski", new DateTime(1985, 8, 20), "piotrszalewski232@gmail.com")
-    }, agencja.TourOperators[1].Excursions[0], new Payment(1200.00m, new DateTime(2025, 11, 5)), ins);
+    },new DateTime(2023,12,23), agencja.TourOperators[1].Excursions[0], 1200.00m, ins);
 var RegistryReport = new RegistryCount();
 var ageReport = RegistryReport.GenerateReport(agencja);
 Console.WriteLine(ageReport);
+var output = ageReport.Data;
+Console.WriteLine(output);
+Console.WriteLine(output.RegCount);
+
 /*
 Agency tplanetpl = new Agency("travel", "Czestochowa", new Person("Robert", "Dymski", 32));
 List<Excursion> excursions = new List<Excursion>();

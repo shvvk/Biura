@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Biura.model\Biura.model.csproj" />
+    <ProjectReference Include="..\Biura.Reports\Biura.Reports.csproj" />
   </ItemGroup>
 
   <ItemGroup>
