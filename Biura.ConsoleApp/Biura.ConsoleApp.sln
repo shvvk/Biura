@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.Tests", "..\Biura.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.Reports", "..\Biura.Reports\Biura.Reports.csproj", "{F59F2322-3011-4EE7-9A0D-2F1B453E4600}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biura.DAL", "..\Biura.DAL\Biura.DAL.csproj", "{6E053367-9C02-4584-A5E8-392D0D9E7BE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F59F2322-3011-4EE7-9A0D-2F1B453E4600}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F59F2322-3011-4EE7-9A0D-2F1B453E4600}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F59F2322-3011-4EE7-9A0D-2F1B453E4600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E053367-9C02-4584-A5E8-392D0D9E7BE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E053367-9C02-4584-A5E8-392D0D9E7BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E053367-9C02-4584-A5E8-392D0D9E7BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E053367-9C02-4584-A5E8-392D0D9E7BE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,16 +4,16 @@ namespace Biura.Model
 {
     public class Registry
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public List<Client> Clients { get; set; }
         public Excursion TripDetails { get; set; }
         public Payment InitialPayment { get; set; }
-        public bool Surcharge {  get; set; }
+        public bool AdditionalPayment {  get; set; }
         public Payment? Afterpayment { get; set; }
+        public DateTime? AfterpaymentDate { get; set; }
+        public DateTime FlightConfirmationDate { get; set; }
         public Insurance InsuranceDetails { get; set; }
-        // automatyczne obliczanie daty doplaty i potwiedzenia lotu
-        // usunąc siec tych biur 
 
         public Registry()
         {
@@ -24,17 +24,25 @@ namespace Biura.Model
             InsuranceDetails = new Insurance();
         }
 
-        public Registry(List<Client> clients,DateTime date, Excursion tripDetails, decimal initialPayment, Insurance insuranceDetails, bool surr = false)
+        public Registry(List<Client> clients, DateTime date, Excursion tripDetails, decimal initialPayment, Insurance insuranceDetails, bool surr = false)
         {
             Clients = clients;
             Date = date;
             TripDetails = tripDetails;
-            InitialPayment = new Payment (initialPayment,date);
-            Surcharge = surr;
+            InitialPayment = new Payment(initialPayment, date);
+            AdditionalPayment = surr;
             // dodac jakiegos if a czy bedzie tworzyc afterpayment 
             // afterpayment i tak bedzie musial byc dodany po jakims czasie 
             //Afterpayment = new Payment(initialPayment, date+new TimeSpan(7, 0, 0, 0));
             InsuranceDetails = insuranceDetails;
+            if (surr)
+            {
+                AfterpaymentDate = date + new TimeSpan(7, 0, 0, 0);
+            }
+            if (tripDetails is not null)
+            {
+                FlightConfirmationDate = tripDetails.Date - new TimeSpan(7, 0, 0, 0);
+            }
         }
 
         public decimal GetTripComission()

@@ -17,7 +17,7 @@ namespace Biura.Reports.Generate
             foreach (var Reg in ag.Registries)
             {
                 profit += (decimal)Reg.InitialPayment.Amount;
-                if (Reg.Surcharge)
+                if (Reg.AdditionalPayment)
                     {
                     profit += Reg.Afterpayment.Amount;
                     }

@@ -9,6 +9,7 @@ namespace Biura.Model
 {
     public class Excursion
     {
+        public int Id { get; set; }
         public Operator TripOperator { get; set; }
         public string Location { get; set; }
         public DateTime Date { get; set; }

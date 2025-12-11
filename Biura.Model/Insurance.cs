@@ -5,7 +5,7 @@ namespace Biura.Model
 {
 	public class Insurance
 	{
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public string PolicyNumber { get; set; }
 		public string Provider { get; set; }
 		public DateTime CoverageStartDate { get; set; }
@@ -14,6 +14,7 @@ namespace Biura.Model
         // add benefits
         public Insurance()
 		{
+
 		}
 
 		public Insurance(

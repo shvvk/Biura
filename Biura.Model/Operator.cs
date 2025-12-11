@@ -4,7 +4,7 @@ namespace Biura.Model
 {
 	public class Operator : IOperator
 	{
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public string Name { get; set; }
 		public string Country { get; set; }
         public List<Excursion> Excursions { get; private set; } = new List<Excursion>();

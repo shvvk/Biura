@@ -1,8 +1,32 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
-using Biura.Model;
+﻿using Biura.Model;
 using Biura.Reports;
 using Biura.Reports.Generate;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Biura.DAL;
+
+IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+    {
+        var cns = context.Configuration.GetConnectionString("DefaultConnection");
+        services.AddDbContext<BiuraDbContext>(options => options.UseSqlServer(cns));
+    }).Build();
+
+var context = _host.Services.GetService<BiuraDbContext>();
+if(context != null)
+{
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    Operator tripOperator = new Operator()
+    {
+        Name = "Itaka",
+        Country = "Poland",
+        CommisionRate = 0.1m
+    };
+    context.Operators.Add(tripOperator);
+    context.SaveChanges();
+}
 
 Operator op = new Operator("Itaka", "Polska", 0.1m);
 Operator op1 = new Operator("Rainbow", "Polska", 0.15m);
@@ -30,6 +54,9 @@ Console.WriteLine(ageReport);
 var output = ageReport.Data;
 Console.WriteLine(output);
 Console.WriteLine(output.RegCount);
+
+
+
 
 /*
 Agency tplanetpl = new Agency("travel", "Czestochowa", new Person("Robert", "Dymski", 32));
