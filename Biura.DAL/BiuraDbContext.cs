@@ -14,5 +14,9 @@ namespace Biura.DAL
             
         }
 
+        internal object Find(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

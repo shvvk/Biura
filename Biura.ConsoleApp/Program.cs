@@ -18,13 +18,13 @@ if(context != null)
 {
     context.Database.Migrate();
     context.Database.EnsureCreated();
-    Operator tripOperator = new Operator()
-    {
-        Name = "Itaka",
-        Country = "Poland",
-        CommisionRate = 0.1m
-    };
-    context.Operators.Add(tripOperator);
+    //Operator tripOperator = new Operator()
+    //{
+    //    Name = "Itaka",
+    //    Country = "Poland",
+    //    CommisionRate = 0.1m
+    //};
+    //context.Operators.Add(tripOperator);
     context.SaveChanges();
 }
 
@@ -55,7 +55,37 @@ var output = ageReport.Data;
 Console.WriteLine(output);
 Console.WriteLine(output.RegCount);
 
+var OperatorSource = new OperatorsInDb(context);
 
+foreach(var o in OperatorSource.AllOperators())
+{
+    Console.WriteLine(o);
+}
+
+//OperatorSource.Remove(OperatorSource.AllOperators().Find(x => x.Name == "Itaka"));
+
+foreach (var o in OperatorSource.AllOperators())
+{
+    Console.WriteLine(o);
+}
+int option = 1;
+while(option != 0)
+{
+    Console.WriteLine("1- dodaj dane, 2-usun dane, 3-wypisz dane, 0-quit");
+    int.TryParse(Console.ReadLine(), out option);
+    switch (option)
+    {
+        case 1: OperatorSource.AddOperator(op); break;
+        case 2: OperatorSource.RemoveOperator(OperatorSource.AllOperators().Find(x => x.Name == "Itaka")); break;
+        case 3:
+            foreach (var o in OperatorSource.AllOperators())
+            {
+                Console.WriteLine(o);
+            }; break;
+        default: Console.WriteLine("all done");break;
+    }
+
+}
 
 
 /*
