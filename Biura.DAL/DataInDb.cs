@@ -20,23 +20,31 @@ namespace Biura.DAL
         {
             return _db.Agencies.ToList();
         }
-        public void updateEntry(Agency entry)
-        {
-            _db.Agencies.Update(entry);
-        }
+        //public void UpdateEntry(Agency entry)
+        //{
+        //    _db.Agencies.Update(entry);
+        //    _db.SaveChanges();
+        //}
         public void UpdateEntry(Agency entry, int change,
-            string name="",
-            string location="",
-            Owner owner= null
+            string name = "",
+            string location = "",
+            string owner = ""
             ) //Update
         {
             switch (change)
             {
                 case 0: entry.Name = name; break;
                 case 1: entry.Location = location; break;
-                case 2: entry.Location = location; break;
-                default: Console.WriteLine("0-change name, 1-change country, 2-change commision rate"); break;
+                case 2: entry.Owner = owner; break;
+                default: Console.WriteLine("nothing changed"); break;
             }
+            _db.SaveChanges();
+        }
+
+        public void AddOperatorToAgency(Agency agency, Operator tourOperator)
+        {
+            agency.TourOperators.Add(tourOperator);
+            _db.SaveChanges();
         }
 
         public void RemoveEntry(Agency entry) //Delete
