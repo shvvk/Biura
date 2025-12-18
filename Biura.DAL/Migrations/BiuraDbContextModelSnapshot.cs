@@ -175,23 +175,6 @@ namespace Biura.DAL.Migrations
                     b.ToTable("Operators");
                 });
 
-            modelBuilder.Entity("Biura.Model.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Payment");
-                });
-
             modelBuilder.Entity("Biura.Model.Registry", b =>
                 {
                     b.Property<int>("Id")
@@ -203,11 +186,11 @@ namespace Biura.DAL.Migrations
                     b.Property<bool>("AdditionalPayment")
                         .HasColumnType("bit");
 
+                    b.Property<decimal?>("Afterpayment")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("AfterpaymentDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("AfterpaymentId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("AgencyId")
                         .HasColumnType("int");
@@ -218,8 +201,8 @@ namespace Biura.DAL.Migrations
                     b.Property<DateTime>("FlightConfirmationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("InitialPaymentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<decimal>("InitialPayment")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("InsuranceDetailsId")
                         .HasColumnType("int");
@@ -229,11 +212,7 @@ namespace Biura.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AfterpaymentId");
-
                     b.HasIndex("AgencyId");
-
-                    b.HasIndex("InitialPaymentId");
 
                     b.HasIndex("InsuranceDetailsId");
 
@@ -276,19 +255,9 @@ namespace Biura.DAL.Migrations
 
             modelBuilder.Entity("Biura.Model.Registry", b =>
                 {
-                    b.HasOne("Biura.Model.Payment", "Afterpayment")
-                        .WithMany()
-                        .HasForeignKey("AfterpaymentId");
-
                     b.HasOne("Biura.Model.Agency", null)
                         .WithMany("Registries")
                         .HasForeignKey("AgencyId");
-
-                    b.HasOne("Biura.Model.Payment", "InitialPayment")
-                        .WithMany()
-                        .HasForeignKey("InitialPaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("Biura.Model.Insurance", "InsuranceDetails")
                         .WithMany()
@@ -301,10 +270,6 @@ namespace Biura.DAL.Migrations
                         .HasForeignKey("TripDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Afterpayment");
-
-                    b.Navigation("InitialPayment");
 
                     b.Navigation("InsuranceDetails");
 

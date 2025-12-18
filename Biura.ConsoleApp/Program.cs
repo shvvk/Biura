@@ -85,7 +85,7 @@ void AgencyMenu(Agency ag)
     switch (option)
     {
         case 1:
-            Console.WriteLine("1- pokaż podstawowe informacje, 2-pokaż wycieczki ,3-pokaż raporty, 4-wroc do menu poczatkowego");
+            Console.WriteLine("1- pokaż podstawowe informacje, 2-pokaż operatorów i wyczieczki ,3-pokaż ewidencje, 4-wroc do menu poczatkowego");
             int.TryParse(Console.ReadLine(), out option);
             switch (option)
             {
@@ -93,24 +93,39 @@ void AgencyMenu(Agency ag)
                     BasicAgInfo(ag);
                     break;
                 case 2: // operatorzy i wycieczki 
-                    Console.WriteLine("dostępni operatorzy wycieczek i ich dostępne wycieczki");
-                    ag.ListAllAvilableExcursions();
+                    Console.WriteLine("dostępni operatorzy oraz wycieczek");
+                    var allops = OperatorSource.AllEntries();
+                    foreach (var o in allops)
+                    {
+                        Console.WriteLine(o);
+                        var excs = ExcursionSource.AllEntries();
+                        var selexcs = excs.Where(e => e.TripOperator.Id == o.Id).ToList();
+                        foreach (var e in selexcs)
+                        {
+                            Console.WriteLine($"\t{e}");
+                        }
+                    }
                     break;
                 case 3: // spredarze itp
-                    ag.ListAllRegistries();
+                    var allregistries = RegistrySource.AllEntries();
+                    foreach (var r in allregistries)
+                    {
+                        Console.WriteLine(r);
+                    }
                     break;
                 case 4: ShowMenu(); break;
                 default: ; break;
             }
             break;
         case 2:
-            Console.WriteLine("1- edytuj podstawowe informacje, 2-edutuj operatorów ,3-edutuj raporty, 4-wroc do menu poczatkowego");
+            Console.WriteLine("1- edytuj podstawowe informacje, 2-edutuj operatorów ,3-edutuj ewidencje, 4-wroc do menu początkowego");
             int.TryParse(Console.ReadLine(), out option);
             switch (option)
             {
                 case 1: // zmiana podstawowych danych agencji
                     Console.WriteLine($"aktualne podstawowe dane agencji:"); BasicAgInfo(ag);
                     Console.WriteLine("wybierz co chcesz edytowac: 1-nazwę agencji, 2-adres agencji, 3-właściciela agencji, 4-anuluj");
+                    int.TryParse(Console.ReadLine(), out option);
                     switch (option)
                     {
                         case 1:
@@ -136,7 +151,7 @@ void AgencyMenu(Agency ag)
                     int.TryParse(Console.ReadLine(), out option);
                     switch (option)
                     {
-                        case 1:
+                        case 1: // dodawanie operatora
                             var nowy = new Operator();
                             Console.WriteLine("podaj nazwę operatora: ");
                             nowy.Name = Console.ReadLine();
@@ -146,11 +161,224 @@ void AgencyMenu(Agency ag)
                             decimal cr = 0.00m;
                             Decimal.TryParse(Console.ReadLine(), out cr);
                             nowy.CommisionRate = cr;
+                            OperatorSource.AddEntry(nowy);
                             AgencySource.AddOperatorToAgency(ag, nowy);
+                            break;
+                        case 2:// edytowanie operatora
+                            Console.WriteLine("wybierz operatora do edycji:");
+                            var alloperators = ag.TourOperators;
+                            foreach (var o in alloperators)
+                            {
+                                Console.WriteLine($"{o.Id}. {o.Name}");
+                            }
+                            int.TryParse(Console.ReadLine(), out option);
+                            var Oper = alloperators.Find(x => x.Id == option);
+                            if (Oper != null)
+                            {
+                                Console.WriteLine("co chcesz edytować? 1-nazwę operatora, 2-kraj pochodzenia, 3-prowizje, 4-anuluj");
+                                int change = -1;
+                                int.TryParse(Console.ReadLine(), out change);
+                                switch (change)
+                                {
+                                    case 1:
+                                        Console.WriteLine("podaj nową nazwę operatora:");
+                                        OperatorSource.UpdateEntry(Oper, change, Console.ReadLine());
+                                        break;
+                                    case 2:
+                                        Console.WriteLine("podaj nowy kraj pochodzenia operatora:");
+                                        OperatorSource.UpdateEntry( Oper, change, Console.ReadLine());
+                                        break;
+                                    case 3:
+                                        Console.WriteLine("podaj nową prowizję operatora (zakres danych od 0-1):");
+                                        decimal comm = 0.00m;
+                                        Decimal.TryParse(Console.ReadLine(), out comm);
+                                        OperatorSource.UpdateEntry(Oper, change, "", comm);
+                                        break;
+                                    case 4: AgencyMenu(ag);
+                                        break;
+                                }
+                            }
+                            else { Console.WriteLine("operator o podanym numerze nie istnieje"); }
+                            break;
+                        case 3://usuwanie operatora
+                            Console.WriteLine("usuń operatora z listy");
+                            if (ag.TourOperators.Count == 0 || ag.TourOperators == null) { Console.WriteLine("brak operatorów do usunięcia"); break; }
+                            Console.WriteLine("wybierz operatora, którego chcesz usunąć: ");
+                            var operators = ag.TourOperators;
+                            foreach (var o in operators)
+                            {
+                                Console.WriteLine($"{o.Id}. {o.Name}");
+                            }
+                            int.TryParse(Console.ReadLine(), out option);
+                            var oper = operators.Find(x => x.Id == option);
+                            if (oper != null)
+                            {
+                                OperatorSource.RemoveEntry(oper);
+                                Console.WriteLine("operator został usunięty");
+                            }
                             break;
                     }
                     break;
-                case 3:
+                case 3:// edycja ewidencji biura
+                    Console.WriteLine("1-dodaj ewidencję, 2-edytuj ewidencję ,3-usun ewidencię");
+                    int.TryParse(Console.ReadLine(), out option);
+                    switch (option)
+                    {
+                        case 1: // dodawanie operatora
+                            var nowy = new Registry();
+                            Console.WriteLine("podaj datę sprzedarzy w formacie dd/mm/yyyy: ");
+
+                            nowy.Date = DateTime.Parse(Console.ReadLine());
+                            Console.WriteLine("podaj ilość osób: ");
+                            int persons = 0;
+                            for(int i = 0 ; i< persons; i++)
+                            {
+                                Console.WriteLine($"podaj imię osoby {i+1}: ");
+                                string fname = Console.ReadLine();
+                                Console.WriteLine($"podaj nazwisko osoby {i+1}: ");
+                                string lname = Console.ReadLine();
+                                Console.WriteLine($"podaj datę urodzenia osoby {i+1} w formacie dd/mm/yyyy: ");
+                                DateTime dob = DateTime.Parse(Console.ReadLine());
+                                Console.WriteLine($"podaj email osoby {i+1}: ");
+                                string email = Console.ReadLine();
+                                nowy.Clients.Add( new Client( fname, lname, dob, email));
+                            }
+                            Console.WriteLine("1-wybierz wycieczke z listy, 2-dodaj nowa wyczieczkę: ");
+                            int.TryParse(Console.ReadLine(), out option);
+                            switch (option)
+                            {
+                                case 1:
+                                    var avilableExcursions = ExcursionSource.AllEntries();
+                                    Console.WriteLine("wybierz z listy");
+                                    foreach (var e in avilableExcursions)
+                                    {
+                                        Console.WriteLine($"{e.Id} {e}");
+                                    }
+                                    int.TryParse(Console.ReadLine(), out option);
+                                    var selected = avilableExcursions.Find(x => x.Id == option);
+                                    nowy.TripDetails = new Excursion(
+                                        selected.TripOperator,selected.Location,selected.Date,selected.Cost,selected.People
+                                        );
+                                    break;
+                                case 2:
+                                    var newExcursion = new Excursion();
+                                    Console.WriteLine("wybierz operatora z listy");
+                                    var avilableOperators = OperatorSource.AllEntries();
+                                    Console.WriteLine("wybierz z listy");
+                                    foreach (var e in avilableOperators)
+                                    {
+                                        Console.WriteLine($"{e.Id} {e}");
+                                    }
+                                    int.TryParse(Console.ReadLine(), out option);
+                                    newExcursion.TripOperator = avilableOperators.Find(x => x.Id == option);
+                                    Console.WriteLine("podaj miejsce wycieczki");
+                                    newExcursion.Location = Console.ReadLine();
+                                    Console.WriteLine("podaj datę wycieczki w formacie dd/mm/yyyy: ");
+                                    newExcursion.Date = DateTime.Parse(Console.ReadLine());
+                                    Console.WriteLine("podaj koszt wycieczki: ");
+                                    decimal comm = 0.00m;
+                                    Decimal.TryParse(Console.ReadLine(), out comm);
+                                    newExcursion.Cost = comm;
+                                    Console.WriteLine("podaj ilość osób: ");
+                                    int people = 0;
+                                    int.TryParse(Console.ReadLine(), out people);
+                                    nowy.TripDetails = newExcursion;
+                                    break;
+                            }
+                            Console.WriteLine("podaj kwotę wpłaty początkowej: ");
+                            decimal initpay = 0.00m;
+                            Decimal.TryParse(Console.ReadLine(), out initpay);
+                            nowy.InitialPayment = initpay;
+                            Console.WriteLine("czy ewidencja ma zawierać dopłatę? 1-tak, 2-nie");
+                            int.TryParse(Console.ReadLine(), out option);
+                            switch (option)
+                            {
+                                case 1: nowy.AdditionalPayment = true; break;
+                                case 2: nowy.AdditionalPayment = false; break;
+                            }
+                            nowy.InsuranceDetails = new Insurance("4423423", "Allianz", DateTime.Now, DateTime.Now.AddMonths(6), 0.05m); ;
+                            RegistrySource.AddEntry(nowy);
+                            //AgencySource.AddRegistryToAgency(ag, nowy);
+                            
+                            break;
+                            
+                            //OperatorSource.AddEntry(nowy);
+                            //AgencySource.AddOperatorToAgency(ag, nowy);
+                            break;
+                        case 2:// edytowanie ewidencji
+                            Console.WriteLine("wybierz ewidencję do edycji:");
+                            var allregistries = ag.Registries;
+                            foreach (var r in allregistries)
+                            {
+                                Console.WriteLine($"{r.Id}. {r}");
+                            }
+                            int.TryParse(Console.ReadLine(), out option);
+                            var Reg = allregistries.Find(x => x.Id == option);
+                            if (Reg != null)
+                            {
+                                Console.WriteLine("co chcesz edytować? 1-datę sprzedaży, 2-klientów, 3-szczegóły wycieczki, 4-wpłatę początkową, 5-dopłatę, 6-szczegóły ubezpieczenia, 7-anuluj");
+                                int change = -1;
+                                int.TryParse(Console.ReadLine(), out change);
+                                switch (change)
+                                {
+                                    case 1:
+                                        Console.WriteLine("podaj nową datę sprzedaży w formacie dd/mm/yyyy:");
+                                        DateTime newdate = DateTime.Parse(Console.ReadLine());
+                                        RegistrySource.UpdateEntry(Reg, change, newdate);
+                                        break;
+                                    case 2:
+                                        // brak implementacji zmiany klientów
+                                        break;
+                                    case 3:
+                                        // brak implementacji zmiany szczegółów wycieczki
+                                        break;
+                                    case 4:
+                                        Console.WriteLine("podaj nową wpłatę początkową:");
+                                        decimal newinitpay = 0.00m;
+                                        Decimal.TryParse(Console.ReadLine(), out newinitpay);
+                                        RegistrySource.UpdateEntry(Reg, change, initialPayment: newinitpay);
+                                        break;
+                                    case 5:
+                                        Console.WriteLine("czy ewidencja ma zawierać dopłatę? 1-tak, 2-nie");
+                                        int dp = -1;
+                                        int.TryParse(Console.ReadLine(), out dp);
+                                        switch (dp)
+                                        {
+                                            case 1:
+                                                RegistrySource.UpdateEntry(Reg, change, additionalPayment: true);
+                                                break;
+                                            case 2:
+                                                RegistrySource.UpdateEntry(Reg, change, additionalPayment: false);
+                                                break;
+                                        }
+                                        break;
+                                    case 6:
+                                        // brak implementacji zmiany szczegółów ubezpieczenia
+                                        break;
+                                    case 7: AgencyMenu(ag);
+                                        break;
+                                }
+                            }
+                            else { Console.WriteLine("ewidencja o podanym numerze nie istnieje"); }
+                            break;
+                        case 3://usuwanie ewidencji
+                            Console.WriteLine("usuń ewidencję z listy");
+                            Console.WriteLine("wybierz ewidencję, którą chcesz usunąć: ");
+                            var registries = ag.Registries;
+                            foreach (var r in registries)
+                            {
+                                Console.WriteLine($"{r.Id}. {r}");
+                            }
+                            int.TryParse(Console.ReadLine(), out option);
+                            var reg = registries.Find(x => x.Id == option);
+                            if (reg != null)
+                            {
+                                RegistrySource.RemoveEntry(reg);
+                                Console.WriteLine("ewidencja została usunięta");
+                            }
+                            if (ag.Registries.Count == 0 || ag.Registries == null) { Console.WriteLine("brak ewidencji do usunięcia"); break; }
+                            break;
+                    }
                     break;
                 case 4: ShowMenu(); break;
             }
@@ -174,13 +402,49 @@ void ShowMenu()
     if (agencynum <= agencies.Count && agencynum > 0) { AgencyMenu(agencja); } else { Console.WriteLine("agencji o tym numerze nie ma na liście"); ShowMenu(); }
 
 }
-
 int option = 1;
-while (option != 0)
+void mainMenu()
 {
     Console.WriteLine("witaj w bazie danych");
-    ShowMenu();
+    Console.WriteLine("1- pokaż menu agencji, 2-wygeneruj raport, 0- wyjście z programu");
+    int.TryParse(Console.ReadLine(), out option);
+    switch (option)
+    {
+        case 1:
+            ShowMenu();
+            break;
+        case 2:
+            Console.WriteLine("wygeneruj raport: 1- ilosc ewidencji w biurze, 2- zysk biura");
+            int.TryParse(Console.ReadLine(), out option);
+            switch (option)
+            {
+                case 1:
+                    {
+                        var RegistryReport = new RegistryCount();
+                        var ageReport = RegistryReport.GenerateReport(agencja);
+                        Console.WriteLine(ageReport);
+                        var output = ageReport.Data;
+                        Console.WriteLine(output);
+                    }
+                    break;
+                case 2:
+                    {
+                        var ProfitReport = new RegistryProfit();
+                        var profitReport = ProfitReport.GenerateReport(agencja);
+                        Console.WriteLine(profitReport);
+                        var output = profitReport.Data;
+                        Console.WriteLine(output);
+                    }
+                    break;
+            }
+            break;
 
+    }
+}
+
+while (option != 0)
+{
+   mainMenu();
 }
 
 /* 

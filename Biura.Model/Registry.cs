@@ -8,9 +8,9 @@ namespace Biura.Model
         public DateTime Date { get; set; }
         public List<Client> Clients { get; set; }
         public Excursion TripDetails { get; set; }
-        public Payment InitialPayment { get; set; }
+        public decimal InitialPayment { get; set; }
         public bool AdditionalPayment {  get; set; }
-        public Payment? Afterpayment { get; set; }
+        public Decimal? Afterpayment { get; set; }
         public DateTime? AfterpaymentDate { get; set; }
         public DateTime FlightConfirmationDate { get; set; }
         public Insurance InsuranceDetails { get; set; }
@@ -20,7 +20,7 @@ namespace Biura.Model
             Clients = new List<Client>();
             Date = new DateTime();
             TripDetails = new Excursion();
-            InitialPayment = new Payment();
+            InitialPayment = 0m;
             InsuranceDetails = new Insurance();
         }
 
@@ -29,7 +29,7 @@ namespace Biura.Model
             Clients = clients;
             Date = date;
             TripDetails = tripDetails;
-            InitialPayment = new Payment(initialPayment, date);
+            InitialPayment = initialPayment;
             AdditionalPayment = surr;
             // dodac jakiegos if a czy bedzie tworzyc afterpayment 
             // afterpayment i tak bedzie musial byc dodany po jakims czasie 
@@ -59,7 +59,7 @@ namespace Biura.Model
         public override string ToString()
         {
             string clientsNames = string.Join(", ", Clients.ConvertAll(c => c.FirstName));
-            return $"Registry for trip to {TripDetails.Location} on {TripDetails.Date.ToShortDateString()} with clients: {clientsNames}. Initial payment: {InitialPayment.Amount} on {InitialPayment.PaymentDate.ToShortDateString()}. Insurance: {InsuranceDetails.PolicyNumber}. Total commission: {GetTotalComission()}";
+            return $"Registry for trip to {TripDetails.Location} on {TripDetails.Date.ToShortDateString()} with clients: {clientsNames}. Initial payment: {InitialPayment} on {Date}. Insurance: {InsuranceDetails.PolicyNumber}. Total commission: {GetTotalComission()}";
         }
 
     }

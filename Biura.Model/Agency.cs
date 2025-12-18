@@ -77,7 +77,7 @@ namespace Biura.Model
                 Clients = clients,
                 Date = date,
                 TripDetails = tripDetails,
-                InitialPayment = new Payment(initialPayment, date),
+                InitialPayment = initialPayment,
                 InsuranceDetails = insuranceDetails
             };
             Registries.Add(newRegistry);

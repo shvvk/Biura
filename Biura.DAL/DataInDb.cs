@@ -57,6 +57,13 @@ namespace Biura.DAL
         {
             return AllEntries().Exists(x => x.Name == entry.Name && x.Owner == entry.Owner && x.Location == entry.Location);
         }
+
+        //public void AddRegistryToAgency(Agency ag, Registry nowy)
+        //{
+        //    IsInDb(nowy);
+        //    ag.Registries.Add(nowy);
+        //    _db.SaveChanges();
+        //}
     }
 
     public class Operators : IOperatorCRUD
@@ -69,7 +76,8 @@ namespace Biura.DAL
         }
         public void AddEntry(Operator entry) //Create
         {
-            if (IsInDb(entry)) { Console.WriteLine("operator already exists in db"); } else { _db.Operators.Add(entry); }
+            if (IsInDb(entry)) { Console.WriteLine("operator already exists in db"); } 
+            else { _db.Operators.Add(entry); }
             _db.SaveChanges();
         }
 
@@ -81,17 +89,19 @@ namespace Biura.DAL
         public void updateEntry(Operator entry)
         {
             _db.Operators.Update(entry);
+            _db.SaveChanges();
         }
 
         public void UpdateEntry(Operator entry, int change, string nc = "", decimal comRate = 0m) //Update
         {
             switch (change)
             {
-                case 0: entry.Name = nc; break;
-                case 1: entry.Country = nc; break;
-                case 2: entry.CommisionRate = comRate; break;
+                case 1: entry.Name = nc; break;
+                case 2: entry.Country = nc; break;
+                case 3: entry.CommisionRate = comRate; break;
                 default: Console.WriteLine("0-change name, 1-change country, 2-change commision rate"); break;
             }
+            _db.SaveChanges();
         }
 
         public void RemoveEntry(Operator entry) //Delete
@@ -105,7 +115,7 @@ namespace Biura.DAL
             return AllEntries().Exists(x => x.Name == entry.Name && x.Country == entry.Country);
         }
     }
-    public class Registries
+    public class Registries // system ewidencji 
     {
         private readonly BiuraDbContext _db;
 
@@ -132,9 +142,9 @@ namespace Biura.DAL
             Registry reg, int change,
             DateTime date = default,
             List<Client> clients = null,
-            Payment initialPayment = null,
+            decimal initialPayment = 0m,
             bool additionalPayment = false,
-            Payment afterpayment = null,
+            decimal afterpayment = 0m,
             Insurance insuranceDetails = null
             )
         {
@@ -160,7 +170,7 @@ namespace Biura.DAL
 
         public bool IsInDb(Registry entry)
         {
-            return AllEntries().Exists(x => x.Date == entry.Date);
+            return AllEntries().Exists(x => x.Date == entry.Date && x.Clients == entry.Clients);
         }
 
     }
@@ -196,9 +206,9 @@ namespace Biura.DAL
             Registry reg, int change,
             DateTime date = default,
             List<Client> clients = null,
-            Payment initialPayment = null,
+            decimal initialPayment = 0m,
             bool additionalPayment = false,
-            Payment afterpayment = null,
+            decimal afterpayment = 0m,
             Insurance insuranceDetails = null
             )
         {

@@ -27,19 +27,6 @@ namespace Biura.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payment",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Insurance",
                 columns: table => new
                 {
@@ -84,7 +71,7 @@ namespace Biura.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Excursion",
+                name: "Excursions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -97,9 +84,9 @@ namespace Biura.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Excursion", x => x.Id);
+                    table.PrimaryKey("PK_Excursions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Excursion_Operators_TripOperatorId",
+                        name: "FK_Excursions_Operators_TripOperatorId",
                         column: x => x.TripOperatorId,
                         principalTable: "Operators",
                         principalColumn: "Id",
@@ -114,9 +101,9 @@ namespace Biura.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TripDetailsId = table.Column<int>(type: "int", nullable: false),
-                    InitialPaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InitialPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AdditionalPayment = table.Column<bool>(type: "bit", nullable: false),
-                    AfterpaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Afterpayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     AfterpaymentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FlightConfirmationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InsuranceDetailsId = table.Column<int>(type: "int", nullable: false),
@@ -131,26 +118,15 @@ namespace Biura.DAL.Migrations
                         principalTable: "Agencies",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Registries_Excursion_TripDetailsId",
+                        name: "FK_Registries_Excursions_TripDetailsId",
                         column: x => x.TripDetailsId,
-                        principalTable: "Excursion",
+                        principalTable: "Excursions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Registries_Insurance_InsuranceDetailsId",
                         column: x => x.InsuranceDetailsId,
                         principalTable: "Insurance",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Registries_Payment_AfterpaymentId",
-                        column: x => x.AfterpaymentId,
-                        principalTable: "Payment",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Registries_Payment_InitialPaymentId",
-                        column: x => x.InitialPaymentId,
-                        principalTable: "Payment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -183,8 +159,8 @@ namespace Biura.DAL.Migrations
                 column: "RegistryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Excursion_TripOperatorId",
-                table: "Excursion",
+                name: "IX_Excursions_TripOperatorId",
+                table: "Excursions",
                 column: "TripOperatorId");
 
             migrationBuilder.CreateIndex(
@@ -198,19 +174,9 @@ namespace Biura.DAL.Migrations
                 column: "AgencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Registries_AfterpaymentId",
-                table: "Registries",
-                column: "AfterpaymentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Registries_AgencyId",
                 table: "Registries",
                 column: "AgencyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Registries_InitialPaymentId",
-                table: "Registries",
-                column: "InitialPaymentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Registries_InsuranceDetailsId",
@@ -233,13 +199,10 @@ namespace Biura.DAL.Migrations
                 name: "Registries");
 
             migrationBuilder.DropTable(
-                name: "Excursion");
+                name: "Excursions");
 
             migrationBuilder.DropTable(
                 name: "Insurance");
-
-            migrationBuilder.DropTable(
-                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "Operators");

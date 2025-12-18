@@ -16,10 +16,10 @@ namespace Biura.Reports.Generate
             decimal profit = 0.00m;
             foreach (var Reg in ag.Registries)
             {
-                profit += (decimal)Reg.InitialPayment.Amount;
+                profit += Reg.InitialPayment;
                 if (Reg.AdditionalPayment)
                     {
-                    profit += Reg.Afterpayment.Amount;
+                    profit += Reg.Afterpayment ?? 0m;
                     }
             }
             var reportDetails = new GeneratedReport()
