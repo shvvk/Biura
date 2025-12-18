@@ -18,29 +18,28 @@ if(context != null)
 {
     context.Database.Migrate();
     context.Database.EnsureCreated();
-    //Operator tripOperator = new Operator()
-    //{
-    //    Name = "Itaka",
-    //    Country = "Poland",
-    //    CommisionRate = 0.1m
-    //};
-    //context.Operators.Add(tripOperator);
     context.SaveChanges();
 }
 
+var AgencySource = new Agencies(context);
+var OperatorSource = new Operators(context);
+var ExcursionSource = new Excursions(context);
+
 Operator op = new Operator("Itaka", "Polska", 0.1m);
 Operator op1 = new Operator("Rainbow", "Polska", 0.15m);
-Agency agencja = new Agency("travel", "Warszawa", new Owner("Jan", "Kowalski"));
+Agency agencja = new Agency("travel", "Warszawa", "Jan Kowalski");
+Console.WriteLine(agencja);
 Insurance ins = new Insurance("4423423", "Allianz", DateTime.Now, DateTime.Now.AddMonths(6), 0.05m);
-agencja.AddOperator(op);
+agencja.AddInsurance(ins);
 op.AddExcursion("Egipt", DateTime.Now, 3245.23m, 2);
 op.ListExcursions();
-agencja.TourOperators[0].AddExcursion("Wręczyca Mała", DateTime.Now, 4235.23m, 3);
-agencja.TourOperators[0].ListExcursions();
+op.AddExcursion("Wręczyca Mała", DateTime.Now, 4235.23m, 3);
+op.ListExcursions();
+op1.AddExcursion("Monachium", DateTime.Now, 1234.56m, 4);
+op1.AddExcursion("Berlin", DateTime.Now, 2345.67m, 2);
+op1.AddExcursion("Praga", DateTime.Now, 3456.78m, 5);
+agencja.AddOperator(op);
 agencja.AddOperator(op1);
-agencja.TourOperators[1].AddExcursion("Monachium", DateTime.Now, 1234.56m, 4);
-agencja.TourOperators[1].AddExcursion("Berlin", DateTime.Now, 2345.67m, 2);
-agencja.TourOperators[1].AddExcursion("Praga", DateTime.Now, 3456.78m, 5);
 agencja.ListAllAvilableExcursions();
 agencja.NewRegistry(
     new List<Client>
@@ -48,90 +47,93 @@ agencja.NewRegistry(
         new Client("Anna", "Nowak", new DateTime(1990, 5, 15),"annanowak2@gmail.com"),
         new Client("Piotr", "Zalewski", new DateTime(1985, 8, 20), "piotrszalewski232@gmail.com")
     },new DateTime(2023,12,23), agencja.TourOperators[1].Excursions[0], 1200.00m, ins);
+
+AgencySource.AddEntry(agencja);
+
+foreach (var o in AgencySource.AllEntries())
+{
+    Console.WriteLine(o);
+    foreach (var to in o.TourOperators)
+    {
+        Console.WriteLine($"\t{to}");
+        foreach(var ex in to.Excursions)
+        {
+            Console.WriteLine($"\t\t{ex}");
+        }
+    }
+    foreach (var r in o.Registries)
+    {
+        Console.WriteLine($"\t{r}");
+    }
+}
+
+void ListAgencyData(Agency ag)
+{
+    Console.WriteLine($"Id: {ag.Id}");
+    Console.WriteLine($"Nazwa agencji: {ag.Name}");
+    Console.WriteLine($"adres: {ag.Location}");
+    Console.WriteLine($"właściciel: {ag.Owner}");
+    Console.WriteLine("dostępni operatorzy wycieczek i ich dostępne wycieczki");
+    ag.ListAllAvilableExcursions();
+
+}
+
+void AgencyMenu(Agency ag)
+{
+    Console.WriteLine($"agency menu {ag.Name}");
+    int option = -1;
+    Console.WriteLine("1- pokaz dane, 2-edytuj dane,3-usun dane, 4-wroc do menu poczatkowego");
+    int.TryParse(Console.ReadLine(), out option);
+    switch (option)
+    {
+        case 1: ListAgencyData(ag); break;
+        case 4: ShowMenu(); break;
+        default: Console.WriteLine("all done"); break;
+    }
+
+}
+void ShowMenu()
+{
+    Console.WriteLine("wybierz agencje z listy ");
+    int agencynum = -1;
+    var agencies = AgencySource.AllEntries();
+    foreach (var a in agencies)
+    {
+        Console.WriteLine($"{a.Id}. {a.Name}");
+    }
+    int.TryParse(Console.ReadLine(), out agencynum);
+    var agencja = agencies.Find(x => x.Id == agencynum);
+    if (agencynum <= agencies.Count && agencynum > 0) { AgencyMenu(agencja); } else { Console.WriteLine("agencji o tym numerze nie ma na liście"); ShowMenu(); }
+
+}
+
+int option = 1;
+while (option != 0)
+{
+    Console.WriteLine("witaj w bazie danych");
+    ShowMenu();
+
+}
+
+/* 
 var RegistryReport = new RegistryCount();
 var ageReport = RegistryReport.GenerateReport(agencja);
 Console.WriteLine(ageReport);
 var output = ageReport.Data;
 Console.WriteLine(output);
 Console.WriteLine(output.RegCount);
-
-var OperatorSource = new DataInDb(context);
-
-foreach(var o in OperatorSource.AllOperators())
-{
-    Console.WriteLine(o);
-}
-
-//OperatorSource.Remove(OperatorSource.AllOperators().Find(x => x.Name == "Itaka"));
-
-foreach (var o in OperatorSource.AllOperators())
-{
-    Console.WriteLine(o);
-}
-int option = 1;
-while(option != 0)
-{
-    Console.WriteLine("1- dodaj dane, 2-usun dane, 3-wypisz dane, 0-quit");
-    int.TryParse(Console.ReadLine(), out option);
-    switch (option)
-    {
-        case 1: OperatorSource.AddOperator(op); break;
-        case 2: OperatorSource.RemoveOperator(OperatorSource.AllOperators().Find(x => x.Name == "Itaka")); break;
-        case 3:
-            foreach (var o in OperatorSource.AllOperators())
-            {
-                Console.WriteLine(o);
-            }; break;
-        default: Console.WriteLine("all done");break;
-    }
-
-}
-
+*/
 
 /*
-Agency tplanetpl = new Agency("travel", "Czestochowa", new Person("Robert", "Dymski", 32));
-List<Excursion> excursions = new List<Excursion>();
-void ListExcursions()
+foreach(var o in OperatorSource.AllEntries())
 {
-    Console.WriteLine($"List contains {excursions.Count} excursions");
-    foreach (Excursion ex in excursions)
-    {
-        Console.WriteLine(ex);
-    }
+    Console.WriteLine(o);
 }
 
 
+foreach (var o in OperatorSource.AllEntries())
+{
+    Console.WriteLine(o);
+}
 
-Person p1 = new Person("Jan", "Kowalski", new DateTime(1997, 4, 12), "jankowalski@gmail.com");
-Person p2 = new Person("Kamil", "Królikowski", new DateTime(2001, 4, 12), "KamilKrolikowski@gmail.com");
-Person p3 = new Person("Igor", "Kowalczyk", new DateTime(1991, 7, 11), "igorkowalczyk@gmail.com");
-
-DateTime d1 = new DateTime(2020, 12, 23);
-Excursion e1 = new Excursion("Afryka", DateTime.Now, 3245.23, 2);
-Excursion e2 = new Excursion("Zabrze", DateTime.Today, 324f, 3);
-Excursion e3 = new Excursion("Monachium", d1, 4548f, 4);
-
-Client c = new Client(p1, DateTime.Now);
-Client c1 = new Client(p2, DateTime.Now);
-
-
-excursions.Add(e1);
-
-Console.WriteLine(e1);
-
-Console.WriteLine(c1);
-c1.ShowBookedTrip();
-c1.TripBooked = e1;
-c1.ShowBookedTrip();
-
-Console.WriteLine(tplanetpl);
-
-tplanetpl.ListClients();
-ListExcursions();
-
-tplanetpl.AddCLient(c1);
-tplanetpl.AddClient(new Client("Karol", "Nowak", 32, DateTime.Now));
-tplanetpl.AddClient(new Client(p3, d1));
-tplanetpl.AddClient(p2);
-tplanetpl.ListClients();
 */

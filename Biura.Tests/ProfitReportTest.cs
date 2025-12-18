@@ -16,7 +16,7 @@ namespace Biura.Tests
                 3
                 );
             var exc2 = new Excursion(new Operator(), "", DateTime.Now, 12345.32m, 2);
-            Agency agencja = new Agency("travel", "Warszawa", new Owner("Jan", "Kowalski"));
+            Agency agencja = new Agency("travel", "Warszawa", "Jan Kowalski");
             agencja.NewRegistry(
                 new List<Client>{},
                 DateTime.Now,

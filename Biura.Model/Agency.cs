@@ -9,9 +9,10 @@ namespace Biura.Model
 
     public class Agency
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
-        public Owner Owner { get; set; }
+        public string Owner { get; set; }
         public List<Operator> TourOperators { get; set; }
         public List<Insurance> Insurances { get; set; }
         public List<Registry> Registries { get; set; } = new List<Registry>();
@@ -21,12 +22,12 @@ namespace Biura.Model
         {
             Name = string.Empty;
             Location = string.Empty;
-            Owner = new Owner();
+            Owner = string.Empty;
             TourOperators = new List<Operator>();
             Insurances = new List<Insurance>();
         }
 
-        public Agency(string name, string location, Owner owner)
+        public Agency(string name, string location, string owner)
         {
             Name = name;
             Location = location;
@@ -72,7 +73,7 @@ namespace Biura.Model
 
         public override string ToString()
         {
-            return $"biuro wycieczkowe {Name} ul {Location} wlasciciel {Owner}";
+            return $"biuro wycieczkowe {Name} ul {Location} wlasciciel nazywa sie {Owner}";
         }
     }
 }

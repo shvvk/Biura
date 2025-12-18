@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biura.DAL.Migrations
 {
     [DbContext(typeof(BiuraDbContext))]
-    [Migration("20251211230634_Initial")]
-    partial class Initial
+    [Migration("20251218151716_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,11 +25,38 @@ namespace Biura.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Biura.Model.Agency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Owner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Agencies");
+                });
+
             modelBuilder.Entity("Biura.Model.Client", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -84,7 +111,7 @@ namespace Biura.DAL.Migrations
 
                     b.HasIndex("TripOperatorId");
 
-                    b.ToTable("Excursions");
+                    b.ToTable("Excursion");
                 });
 
             modelBuilder.Entity("Biura.Model.Insurance", b =>
@@ -94,6 +121,9 @@ namespace Biura.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AgencyId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("ComissionRate")
                         .HasColumnType("decimal(18,2)");
@@ -114,7 +144,9 @@ namespace Biura.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Insurances");
+                    b.HasIndex("AgencyId");
+
+                    b.ToTable("Insurance");
                 });
 
             modelBuilder.Entity("Biura.Model.Operator", b =>
@@ -124,6 +156,9 @@ namespace Biura.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AgencyId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("CommisionRate")
                         .HasColumnType("decimal(18,2)");
@@ -137,6 +172,8 @@ namespace Biura.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AgencyId");
 
                     b.ToTable("Operators");
                 });
@@ -175,6 +212,9 @@ namespace Biura.DAL.Migrations
                     b.Property<Guid?>("AfterpaymentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("AgencyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -193,6 +233,8 @@ namespace Biura.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AfterpaymentId");
+
+                    b.HasIndex("AgencyId");
 
                     b.HasIndex("InitialPaymentId");
 
@@ -221,11 +263,29 @@ namespace Biura.DAL.Migrations
                     b.Navigation("TripOperator");
                 });
 
+            modelBuilder.Entity("Biura.Model.Insurance", b =>
+                {
+                    b.HasOne("Biura.Model.Agency", null)
+                        .WithMany("Insurances")
+                        .HasForeignKey("AgencyId");
+                });
+
+            modelBuilder.Entity("Biura.Model.Operator", b =>
+                {
+                    b.HasOne("Biura.Model.Agency", null)
+                        .WithMany("TourOperators")
+                        .HasForeignKey("AgencyId");
+                });
+
             modelBuilder.Entity("Biura.Model.Registry", b =>
                 {
                     b.HasOne("Biura.Model.Payment", "Afterpayment")
                         .WithMany()
                         .HasForeignKey("AfterpaymentId");
+
+                    b.HasOne("Biura.Model.Agency", null)
+                        .WithMany("Registries")
+                        .HasForeignKey("AgencyId");
 
                     b.HasOne("Biura.Model.Payment", "InitialPayment")
                         .WithMany()
@@ -252,6 +312,15 @@ namespace Biura.DAL.Migrations
                     b.Navigation("InsuranceDetails");
 
                     b.Navigation("TripDetails");
+                });
+
+            modelBuilder.Entity("Biura.Model.Agency", b =>
+                {
+                    b.Navigation("Insurances");
+
+                    b.Navigation("Registries");
+
+                    b.Navigation("TourOperators");
                 });
 
             modelBuilder.Entity("Biura.Model.Operator", b =>

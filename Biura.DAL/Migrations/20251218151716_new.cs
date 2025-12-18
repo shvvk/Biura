@@ -6,41 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Biura.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Insurances",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PolicyNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverageStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CoverageEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ComissionRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Insurances", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Operators",
+                name: "Agencies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommisionRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Operators", x => x.Id);
+                    table.PrimaryKey("PK_Agencies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,7 +40,51 @@ namespace Biura.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Excursions",
+                name: "Insurance",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PolicyNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverageStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CoverageEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ComissionRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AgencyId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Insurance", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Insurance_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Operators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommisionRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AgencyId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Operators", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Operators_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Excursion",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -70,9 +97,9 @@ namespace Biura.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Excursions", x => x.Id);
+                    table.PrimaryKey("PK_Excursion", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Excursions_Operators_TripOperatorId",
+                        name: "FK_Excursion_Operators_TripOperatorId",
                         column: x => x.TripOperatorId,
                         principalTable: "Operators",
                         principalColumn: "Id",
@@ -92,21 +119,27 @@ namespace Biura.DAL.Migrations
                     AfterpaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AfterpaymentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FlightConfirmationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InsuranceDetailsId = table.Column<int>(type: "int", nullable: false)
+                    InsuranceDetailsId = table.Column<int>(type: "int", nullable: false),
+                    AgencyId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Registries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Registries_Excursions_TripDetailsId",
+                        name: "FK_Registries_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Registries_Excursion_TripDetailsId",
                         column: x => x.TripDetailsId,
-                        principalTable: "Excursions",
+                        principalTable: "Excursion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Registries_Insurances_InsuranceDetailsId",
+                        name: "FK_Registries_Insurance_InsuranceDetailsId",
                         column: x => x.InsuranceDetailsId,
-                        principalTable: "Insurances",
+                        principalTable: "Insurance",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -126,7 +159,8 @@ namespace Biura.DAL.Migrations
                 name: "Client",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegistryId = table.Column<int>(type: "int", nullable: true),
@@ -149,14 +183,29 @@ namespace Biura.DAL.Migrations
                 column: "RegistryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Excursions_TripOperatorId",
-                table: "Excursions",
+                name: "IX_Excursion_TripOperatorId",
+                table: "Excursion",
                 column: "TripOperatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Insurance_AgencyId",
+                table: "Insurance",
+                column: "AgencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_AgencyId",
+                table: "Operators",
+                column: "AgencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Registries_AfterpaymentId",
                 table: "Registries",
                 column: "AfterpaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registries_AgencyId",
+                table: "Registries",
+                column: "AgencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Registries_InitialPaymentId",
@@ -184,16 +233,19 @@ namespace Biura.DAL.Migrations
                 name: "Registries");
 
             migrationBuilder.DropTable(
-                name: "Excursions");
+                name: "Excursion");
 
             migrationBuilder.DropTable(
-                name: "Insurances");
+                name: "Insurance");
 
             migrationBuilder.DropTable(
                 name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "Operators");
+
+            migrationBuilder.DropTable(
+                name: "Agencies");
         }
     }
 }
