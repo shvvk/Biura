@@ -58,6 +58,18 @@ namespace Biura.Model
             }
         }
 
+        public void ListAllRegistries()
+        {
+            Console.WriteLine($"Rejestry wycieczek w agencji {Name}");
+            Console.WriteLine($"Znaleziono {Registries.Count} rejestrów:");
+            int i = 0;
+            foreach (var registry in Registries)
+            {
+                Console.WriteLine($"{i}. {registry}");
+                i++;
+            }
+        }
+
         public void NewRegistry(List<Client> clients, DateTime date, Excursion tripDetails, decimal initialPayment, Insurance insuranceDetails, bool surr = false)
         {
             Registry newRegistry = new Registry

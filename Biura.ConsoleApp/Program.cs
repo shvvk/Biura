@@ -69,13 +69,7 @@ foreach (var o in AgencySource.AllEntries())
 
 void ListAgencyData(Agency ag)
 {
-    Console.WriteLine($"Id: {ag.Id}");
-    Console.WriteLine($"Nazwa agencji: {ag.Name}");
-    Console.WriteLine($"adres: {ag.Location}");
-    Console.WriteLine($"właściciel: {ag.Owner}");
-    Console.WriteLine("dostępni operatorzy wycieczek i ich dostępne wycieczki");
-    ag.ListAllAvilableExcursions();
-
+    
 }
 
 void AgencyMenu(Agency ag)
@@ -86,7 +80,28 @@ void AgencyMenu(Agency ag)
     int.TryParse(Console.ReadLine(), out option);
     switch (option)
     {
-        case 1: ListAgencyData(ag); break;
+        case 1:
+            Console.WriteLine("1- pokaż podstawowe informacje, 2-pokaż wycieczki ,3-pokaż raporty, 4-wroc do menu poczatkowego");
+            int.TryParse(Console.ReadLine(), out option);
+            switch (option)
+            {
+                case 1:
+                    Console.WriteLine($"Id: {ag.Id}");
+                    Console.WriteLine($"Nazwa agencji: {ag.Name}");
+                    Console.WriteLine($"adres: {ag.Location}");
+                    Console.WriteLine($"właściciel: {ag.Owner}"); 
+                    break;
+                case 2:
+                    Console.WriteLine("dostępni operatorzy wycieczek i ich dostępne wycieczki");
+                    ag.ListAllAvilableExcursions();
+                    break;
+                case 3: 
+                    ag.ListAllRegistries();
+                    break;
+                case 4: ShowMenu(); break;
+                default: Console.WriteLine("all done"); break;
+            }
+            break;
         case 4: ShowMenu(); break;
         default: Console.WriteLine("all done"); break;
     }

@@ -56,7 +56,11 @@ namespace Biura.Model
             return(GetTripComission() + GetInsuranceComission());
         }
 
-
+        public override string ToString()
+        {
+            string clientsNames = string.Join(", ", Clients.ConvertAll(c => c.FirstName));
+            return $"Registry for trip to {TripDetails.Location} on {TripDetails.Date.ToShortDateString()} with clients: {clientsNames}. Initial payment: {InitialPayment.Amount} on {InitialPayment.PaymentDate.ToShortDateString()}. Insurance: {InsuranceDetails.PolicyNumber}. Total commission: {GetTotalComission()}";
+        }
 
     }
 
