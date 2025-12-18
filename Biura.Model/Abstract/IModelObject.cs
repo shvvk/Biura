@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Biura.Model;
 namespace Biura.model.Abstract
 {
-    internal interface IOperator
+    public interface IModelObject
     {
-        public void AddExcursion(string place, DateTime date, decimal cost, int persons);
+        int Id { get; set; }
     }
 }

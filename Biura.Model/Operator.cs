@@ -2,7 +2,7 @@
 using Biura.model.Abstract;
 namespace Biura.Model
 {
-	public class Operator : IOperator
+	public class Operator : IModelObject
 	{
         public int Id { get; set; }
         public string Name { get; set; }

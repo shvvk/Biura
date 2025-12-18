@@ -55,7 +55,7 @@ var output = ageReport.Data;
 Console.WriteLine(output);
 Console.WriteLine(output.RegCount);
 
-var OperatorSource = new OperatorsInDb(context);
+var OperatorSource = new DataInDb(context);
 
 foreach(var o in OperatorSource.AllOperators())
 {
